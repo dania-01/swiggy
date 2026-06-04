@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Phone, Lock, Eye, EyeOff, ArrowRight, CheckCircle2 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
 
 function Field({ label, id, type = "text", placeholder, value, onChange, error, icon: Icon, rightSlot }) {
@@ -47,6 +48,7 @@ export default function LoginForm() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { login } = useAuth();
 
   function validate() {
     const e = {};
@@ -65,6 +67,7 @@ export default function LoginForm() {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 900));
     setLoading(false);
+    login({ name: "User", phone });
     setSuccess(true);
   }
 

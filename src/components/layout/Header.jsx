@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
 import { useLocation } from "@/context/LocationContext";
+import { useAuth } from "@/context/AuthContext";
 import LocationModal from "@/components/ui/LocationModal";
 import { cn } from "@/lib/utils";
 
@@ -34,7 +35,7 @@ function SwiggyLogo() {
 
 function LocationPill({ location, onClick }) {
   return (
-    <button onClick={onClick} className="flex items-end gap-1.5 group max-w-[260px] py-1">
+    <button onClick={onClick} className="flex items-end gap-1.5 group max-w-65 py-1">
       <div className="text-left leading-none">
         <div className="flex items-center gap-1">
           <span className="text-sm font-bold text-(--swiggy-text) border-b-2 border-(--swiggy-text) truncate max-w-28">
@@ -72,16 +73,9 @@ function NavLink({ href, icon: Icon, label, badge, onClick }) {
 
 function CartNavLink() {
   const { totalItems } = useCart();
-
   return (
-    <Link
-      href="/cart"
-      className="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-(--swiggy-text) hover:text-(--swiggy-orange) transition-colors group whitespace-nowrap"
-    >
-      <ShoppingCart
-        size={18}
-        className="text-(--swiggy-text) group-hover:text-(--swiggy-orange) transition-colors"
-      />
+    <Link href="/cart" className="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-(--swiggy-text) hover:text-(--swiggy-orange) transition-colors group whitespace-nowrap">
+      <ShoppingCart size={18} className="text-(--swiggy-text) group-hover:text-(--swiggy-orange) transition-colors" />
       <span className="flex items-center gap-1">
         <span className="text-(--swiggy-orange) font-bold">{totalItems}</span>
         Cart
@@ -90,10 +84,38 @@ function CartNavLink() {
   );
 }
 
+function UserMenu({ onClose }) {
+  const { user, logout } = useAuth();
+  if (!user) return (
+    <NavLink href="/auth/login" icon={User} label="Sign In" onClick={onClose} />
+  );
+  return (
+    <div className="relative group">
+      <button className="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-(--swiggy-text) hover:text-(--swiggy-orange) transition-colors whitespace-nowrap">
+        <div className="size-7 rounded-full bg-(--swiggy-orange) flex items-center justify-center text-white text-xs font-bold shrink-0">
+          {user.name?.[0]?.toUpperCase() ?? "U"}
+        </div>
+        <span className="hidden lg:block max-w-24 truncate">{user.name?.split(" ")[0]}</span>
+        <ChevronDown size={14} />
+      </button>
+      {/* Dropdown */}
+      <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.12)] border border-gray-100 py-1 z-50 min-w-[160px] hidden group-hover:block">
+        <Link href="/orders" onClick={onClose} className="flex items-center gap-2 px-4 py-2.5 text-sm text-(--swiggy-text) hover:bg-gray-50 transition-colors">
+          <ShoppingCart size={15} className="text-(--swiggy-gray)" /> My Orders
+        </Link>
+        <button onClick={() => { logout(); onClose?.(); }} className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors">
+          <User size={15} /> Logout
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [locationModal, setLocationModal] = useState(false);
   const { location, setLocation } = useLocation();
+  const { user, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-[0_2px_6px_rgba(0,0,0,0.08)]">
@@ -114,7 +136,7 @@ export default function Header() {
             <NavLink href="/search" icon={Search} label="Search" />
             <NavLink href="/offers" icon={Tag} label="Offers" badge="NEW" />
             <NavLink href="/help" icon={HelpCircle} label="Help" />
-            <NavLink href="/auth/login" icon={User} label="Sign In" />
+            <UserMenu />
             <CartNavLink />
           </nav>
 
@@ -156,7 +178,16 @@ export default function Header() {
           <NavLink href="/search" icon={Search} label="Search" onClick={() => setMobileOpen(false)} />
           <NavLink href="/offers" icon={Tag} label="Offers" badge="NEW" onClick={() => setMobileOpen(false)} />
           <NavLink href="/help" icon={HelpCircle} label="Help" onClick={() => setMobileOpen(false)} />
-          <NavLink href="/auth/login" icon={User} label="Sign In" onClick={() => setMobileOpen(false)} />
+          {user ? (
+            <>
+              <NavLink href="/orders" icon={ShoppingCart} label="My Orders" onClick={() => setMobileOpen(false)} />
+              <button onClick={() => { logout(); setMobileOpen(false); }} className="flex items-center gap-1.5 px-2 py-2 text-sm font-medium text-red-500 hover:text-red-600 transition-colors">
+                <User size={18} /> Logout
+              </button>
+            </>
+          ) : (
+            <NavLink href="/auth/login" icon={User} label="Sign In" onClick={() => setMobileOpen(false)} />
+          )}
         </div>
       )}
     </header>

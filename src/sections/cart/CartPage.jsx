@@ -9,13 +9,14 @@ import { CDN_URL } from "@/lib/data/restaurants";
 import { formatPrice } from "@/lib/utils/formatters";
 import { useCart } from "@/hooks/useCart";
 import { useLocation } from "@/context/LocationContext";
+import { useOrders } from "@/hooks/useOrders";
 
 const COUPONS = {
-  SWIGGY50:  { discount: 0.50, max: 100, label: "50% off up to ₹100" },
-  WELCOME20: { discount: 0.20, max: 60,  label: "20% off up to ₹60" },
-  SAVE100:   { discount: 0,    flat: 100, label: "Flat ₹100 off" },
-  FLAT30:    { discount: 0.30, max: 80,  label: "30% off up to ₹80" },
-  FREEDEL:   { discount: 0,    flat: 30,  label: "Free delivery" },
+  SWIGGY50:  { discount: 0.50, max: 100,  label: "50% off up to ₹100" },
+  WELCOME20: { discount: 0.20, max: 60,   label: "20% off up to ₹60"  },
+  FLAT100:   { discount: 0,    flat: 100,  minOrder: 399, label: "Flat ₹100 off above ₹399" },
+  FLAT30:    { discount: 0.30, max: 80,   label: "30% off up to ₹80"  },
+  FREEDEL:   { discount: 0,    freeDelivery: true, label: "Free delivery" },
 };
 
 /* ── Stepper ──────────────────────────────────────────────── */
@@ -153,13 +154,15 @@ function CouponSection({ coupon, onApply, onRemove }) {
 
 /* ── Bill details ─────────────────────────────────────────── */
 function BillDetails({ totalPrice, coupon }) {
-  const couponDiscount = coupon
-    ? COUPONS[coupon.code]?.flat
-      ? Math.min(COUPONS[coupon.code].flat, totalPrice)
-      : Math.min(Math.round(totalPrice * COUPONS[coupon.code].discount), COUPONS[coupon.code].max)
+  const c = coupon ? COUPONS[coupon.code] : null;
+  const couponDiscount = c
+    ? c.freeDelivery ? 0
+    : c.flat ? (c.minOrder && totalPrice < c.minOrder ? 0 : Math.min(c.flat, totalPrice))
+    : Math.min(Math.round(totalPrice * c.discount), c.max)
     : 0;
   const afterCoupon = totalPrice - couponDiscount;
-  const deliveryFee = afterCoupon >= 299 ? 0 : 30;
+  const freeDelivery = (c?.freeDelivery) || afterCoupon >= 299;
+  const deliveryFee = freeDelivery ? 0 : 30;
   const platformFee = 5;
   const gst = Math.round(afterCoupon * 0.05);
   const grandTotal = afterCoupon + deliveryFee + platformFee + gst;
@@ -209,12 +212,14 @@ function OrderPlacedScreen({ restaurantName, total }) {
           <span className="text-(--swiggy-gray)">Delivering to your saved address</span>
         </div>
       </div>
-      <Link
-        href="/"
-        className="inline-flex items-center gap-2 bg-(--swiggy-orange) text-white px-7 py-3 rounded-xl font-bold text-sm hover:bg-[#e04800] transition-colors"
-      >
-        Order more food →
-      </Link>
+      <div className="flex items-center gap-3 flex-wrap justify-center">
+        <Link href="/" className="inline-flex items-center gap-2 bg-(--swiggy-orange) text-white px-6 py-3 rounded-xl font-bold text-sm hover:bg-[#e04800] transition-colors">
+          Order more food →
+        </Link>
+        <Link href="/orders" className="inline-flex items-center gap-2 border border-gray-200 text-(--swiggy-text) px-6 py-3 rounded-xl font-semibold text-sm hover:bg-gray-50 transition-colors">
+          View Orders
+        </Link>
+      </div>
     </div>
   );
 }
@@ -267,12 +272,23 @@ function EmptyCart() {
 export default function CartPage() {
   const { items, restaurantName, totalPrice, clearCart } = useCart();
   const { location } = useLocation();
+  const { addOrder } = useOrders();
   const [coupon, setCoupon] = useState(null);
   const [placed, setPlaced] = useState(false);
   const [placedMeta, setPlacedMeta] = useState(null);
 
   function handlePlace() {
     const { grandTotal } = BillDetails({ totalPrice, coupon });
+    const order = {
+      id: Date.now(),
+      restaurantName,
+      items: items.map((i) => ({ name: i.name, price: i.price, quantity: i.quantity })),
+      total: grandTotal,
+      coupon: coupon?.code || null,
+      address: location.sublabel || location.label,
+      placedAt: new Date().toISOString(),
+    };
+    addOrder(order);
     setPlacedMeta({ restaurantName, total: grandTotal });
     setPlaced(true);
     clearCart();

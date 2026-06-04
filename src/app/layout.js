@@ -1,6 +1,7 @@
 import { CartProvider } from "@/context/CartContext";
 import { LocationProvider } from "@/context/LocationContext";
 import { ToastProvider } from "@/context/ToastContext";
+import { AuthProvider } from "@/context/AuthContext";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import BackToTop from "@/components/ui/BackToTop";
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-white" style={{ fontFamily: "'Gilroy', Arial, 'Helvetica Neue', sans-serif" }}>
+        <AuthProvider>
         <LocationProvider>
           <ToastProvider>
           <CartProvider>
@@ -29,6 +31,7 @@ export default function RootLayout({ children }) {
           </CartProvider>
           </ToastProvider>
         </LocationProvider>
+        </AuthProvider>
       </body>
     </html>
   );
