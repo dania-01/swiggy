@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Clock, ChevronLeft, Bike } from "lucide-react";
+import { Clock, ChevronLeft, Bike, Search, X } from "lucide-react";
 import { VegIndicator } from "@/components/ui/badge";
 import { CDN_URL } from "@/lib/data/restaurants";
 import { formatRating, formatDeliveryTime, formatPriceForTwo } from "@/lib/utils/formatters";
@@ -132,16 +132,29 @@ function RestaurantHeader({ restaurant }) {
 /* ── Main page ──────────────────────────────────────────── */
 export default function RestaurantPage({ restaurant, menu }) {
   const [switchPayload, setSwitchPayload] = useState(null);
+  const [vegOnly, setVegOnly] = useState(false);
+  const [menuSearch, setMenuSearch] = useState("");
   const { restaurantName: cartRestaurantName } = useCart();
+
+  const filteredMenu = menu
+    .map((cat) => ({
+      ...cat,
+      items: cat.items.filter((i) => {
+        const matchVeg = vegOnly ? i.isVeg : true;
+        const matchSearch = menuSearch.trim()
+          ? i.name.toLowerCase().includes(menuSearch.toLowerCase())
+          : true;
+        return matchVeg && matchSearch;
+      }),
+    }))
+    .filter((cat) => cat.items.length > 0);
 
   function handleSwitchRestaurant(callback) {
     setSwitchPayload({ callback });
   }
 
   function confirmSwitch() {
-    if (switchPayload?.callback) {
-      switchPayload.callback();
-    }
+    if (switchPayload?.callback) switchPayload.callback();
     setSwitchPayload(null);
   }
 
@@ -149,10 +162,39 @@ export default function RestaurantPage({ restaurant, menu }) {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 pb-28">
       <RestaurantHeader restaurant={restaurant} />
 
+      {/* Menu search + veg toggle */}
+      <div className="flex items-center justify-between gap-3 py-3 border-b border-gray-100 flex-wrap">
+        {/* Search input */}
+        <div className="relative flex-1 max-w-xs">
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-(--swiggy-gray) pointer-events-none" />
+          <input
+            type="search"
+            value={menuSearch}
+            onChange={(e) => setMenuSearch(e.target.value)}
+            placeholder="Search within menu…"
+            className="w-full h-9 pl-8 pr-8 rounded-full border border-gray-200 bg-gray-50 text-xs text-(--swiggy-text) placeholder:text-gray-400 outline-none focus:border-(--swiggy-orange) focus:bg-white transition-colors"
+          />
+          {menuSearch && (
+            <button onClick={() => setMenuSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-(--swiggy-gray)">
+              <X size={13} />
+            </button>
+          )}
+        </div>
+        <span className="text-xs font-semibold text-(--swiggy-text)">Veg Only</span>
+        <button
+          onClick={() => setVegOnly((v) => !v)}
+          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${vegOnly ? "bg-(--swiggy-green)" : "bg-gray-200"}`}
+          role="switch"
+          aria-checked={vegOnly}
+        >
+          <span className={`inline-block size-4 rounded-full bg-white shadow transition-transform ${vegOnly ? "translate-x-6" : "translate-x-1"}`} />
+        </button>
+      </div>
+
       {/* Menu */}
       <div className="mt-2">
         <MenuSection
-          menu={menu}
+          menu={filteredMenu}
           restaurantId={restaurant.id}
           restaurantName={restaurant.name}
           onSwitchRestaurant={handleSwitchRestaurant}

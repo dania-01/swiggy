@@ -7,6 +7,7 @@ import { VegIndicator } from "@/components/ui/badge";
 import { CDN_URL } from "@/lib/data/restaurants";
 import { formatPrice } from "@/lib/utils/formatters";
 import { useCart } from "@/hooks/useCart";
+import { useToast } from "@/context/ToastContext";
 import { cn } from "@/lib/utils";
 
 function AddStepper({ quantity, onAdd, onRemove }) {
@@ -31,15 +32,17 @@ function AddStepper({ quantity, onAdd, onRemove }) {
 
 export default function FoodItemCard({ item, restaurantId, restaurantName, onSwitchRestaurant }) {
   const { addItem, removeItem, getItemQuantity, isFromDifferentRestaurant } = useCart();
+  const { show } = useToast();
   const quantity = getItemQuantity(item.id);
   const [imgError, setImgError] = useState(false);
 
   function handleAdd() {
     if (isFromDifferentRestaurant(restaurantId)) {
-      onSwitchRestaurant(() => addItem(item, restaurantId, restaurantName));
+      onSwitchRestaurant(() => { addItem(item, restaurantId, restaurantName); show(`${item.name} added to cart`); });
       return;
     }
     addItem(item, restaurantId, restaurantName);
+    if (quantity === 0) show(`${item.name} added to cart`);
   }
 
   function handleRemove() {
