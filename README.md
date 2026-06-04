@@ -1,6 +1,6 @@
 # Swiggy Clone
 
-A full-stack food delivery web app built with **Next.js 16**, inspired by Swiggy's design and UX. Includes restaurant browsing, menu pages, cart management, and auth flows — all with mock data and real Swiggy CDN images.
+A frontend food delivery web app built with **Next.js 16**, inspired by Swiggy's design and UX. Includes restaurant browsing, menu pages, cart management, and auth flows — all with mock data and real Swiggy CDN images.
 
 ---
 
