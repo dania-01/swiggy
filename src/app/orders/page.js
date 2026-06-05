@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronLeft, ShoppingBag, CheckCircle2, Clock, MapPin, Tag } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ChevronLeft, ShoppingBag, CheckCircle2, MapPin, Tag } from "lucide-react";
 import { useOrders } from "@/hooks/useOrders";
+import { useToast } from "@/context/ToastContext";
 import { formatPrice } from "@/lib/utils/formatters";
 
 function timeAgo(iso) {
@@ -14,6 +16,13 @@ function timeAgo(iso) {
 }
 
 function OrderCard({ order }) {
+  const router = useRouter();
+  const { show } = useToast();
+
+  function handleReorder() {
+    show(`Opening ${order.restaurantName} menu — add items to cart!`);
+    router.push(order.restaurantId ? `/restaurant/${order.restaurantId}` : "/");
+  }
   return (
     <div className="bg-white rounded-2xl shadow-[0_1px_8px_rgba(0,0,0,0.08)] overflow-hidden">
       {/* Header */}
@@ -54,12 +63,12 @@ function OrderCard({ order }) {
 
       {/* Reorder */}
       <div className="px-5 pb-4">
-        <Link
-          href="/"
+        <button
+          onClick={handleReorder}
           className="inline-flex items-center gap-2 border border-(--swiggy-orange) text-(--swiggy-orange) text-xs font-bold px-4 py-2 rounded-xl hover:bg-(--swiggy-orange-light) transition-colors"
         >
           Reorder
-        </Link>
+        </button>
       </div>
     </div>
   );

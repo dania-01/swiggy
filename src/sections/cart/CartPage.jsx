@@ -270,7 +270,7 @@ function EmptyCart() {
 
 /* ── Main ─────────────────────────────────────────────────── */
 export default function CartPage() {
-  const { items, restaurantName, totalPrice, clearCart } = useCart();
+  const { items, restaurantId, restaurantName, totalPrice, clearCart } = useCart();
   const { location } = useLocation();
   const { addOrder } = useOrders();
   const [coupon, setCoupon] = useState(null);
@@ -281,6 +281,7 @@ export default function CartPage() {
     const { grandTotal } = BillDetails({ totalPrice, coupon });
     const order = {
       id: Date.now(),
+      restaurantId,
       restaurantName,
       items: items.map((i) => ({ name: i.name, price: i.price, quantity: i.quantity })),
       total: grandTotal,

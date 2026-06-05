@@ -472,6 +472,13 @@ const RESTAURANT_MENU_MAP = {
   "88": MENUS.biryani,      // Veg Darbar by Behrouz
   "89": MENUS.northIndian,  // Veg Meals By LunchBox
   "90": MENUS.dessert,      // Apsara Ice Creams
+  "91": MENUS.northIndian,  // Ashapura Bhojnalay
+  "92": MENUS.biryani,      // Thalaiva Biryani
+  "93": MENUS.dessert,      // Natural Ice Cream
+  "94": MENUS.rolls,        // Sandwich Bazz
+  "95": MENUS.rolls,        // Subway
+  "96": MENUS.pizza,        // La Pino'z Pizza
+  "97": MENUS.burger,       // McDonald's
 };
 
 // Cycle all IMG values across items so each food card shows a different photo

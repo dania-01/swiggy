@@ -1,12 +1,19 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Search, X } from "lucide-react";
 import RestaurantCard from "@/sections/home/RestaurantCard";
 import { restaurants } from "@/lib/data/restaurants";
 
-export default function SearchPage() {
-  const [query, setQuery] = useState("");
+function SearchContent() {
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("q") ?? "");
+
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q) setQuery(q);
+  }, [searchParams]);
 
   const results = useMemo(() => {
     if (!query.trim()) return [];
@@ -79,5 +86,13 @@ export default function SearchPage() {
         </>
       )}
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense>
+      <SearchContent />
+    </Suspense>
   );
 }
