@@ -125,6 +125,36 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Swiggy custom token overrides for dark mode */
+  color-scheme: dark;
+  --swiggy-text: #e2e4ec;
+  --swiggy-gray: #9296a4;
+  --swiggy-light-gray: #252830;
+  --swiggy-orange-light: #2d1508;
+  --swiggy-green-light: #0c1f15;
+}
+
+/* ── Dark mode utility overrides ─────────────────────────── */
+@layer utilities {
+  .dark .bg-white         { background-color: #1e2028; }
+  .dark .bg-gray-50       { background-color: #16171d; }
+  .dark .bg-gray-100      { background-color: #252830; }
+  .dark .bg-gray-200      { background-color: #2d3040; }
+  .dark .border-gray-100  { border-color: #2e3140; }
+  .dark .border-gray-200  { border-color: #373b4e; }
+  .dark .text-gray-200    { color: #3a3e50; }
+  .dark .text-gray-300    { color: #505568; }
+  .dark .text-gray-400    { color: #666b80; }
+  .dark .text-gray-500    { color: #7a7f92; }
+
+  .dark .hover\:bg-gray-50:hover  { background-color: #252830; }
+  .dark .hover\:bg-gray-100:hover { background-color: #2d3040; }
+
+  .dark .divide-gray-100 > * + * { border-color: #2e3140; }
+
+  /* Softer shadow in dark mode */
+  .dark [class*="shadow-["] { box-shadow: 0 1px 12px rgba(0, 0, 0, 0.5); }
 }
 
 @keyframes fade-in-up {

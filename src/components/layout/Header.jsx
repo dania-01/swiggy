@@ -10,10 +10,14 @@ import {
   HelpCircle,
   User,
   ShoppingCart,
+  Heart,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
 import { useLocation } from "@/context/LocationContext";
 import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "@/context/ThemeContext";
 import LocationModal from "@/components/ui/LocationModal";
 import { cn } from "@/lib/utils";
 
@@ -111,6 +115,19 @@ function UserMenu({ onClose }) {
   );
 }
 
+function ThemeToggle() {
+  const { dark, toggle } = useTheme();
+  return (
+    <button
+      onClick={toggle}
+      aria-label="Toggle dark mode"
+      className="flex items-center justify-center size-8 rounded-full text-(--swiggy-gray) hover:text-(--swiggy-orange) hover:bg-gray-100 transition-colors"
+    >
+      {dark ? <Sun size={18} /> : <Moon size={18} />}
+    </button>
+  );
+}
+
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [locationModal, setLocationModal] = useState(false);
@@ -131,17 +148,20 @@ export default function Header() {
           <div className="flex-1" />
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center">
+          <nav className="hidden md:flex items-center gap-1">
             <NavLink href="/corporate" icon={Briefcase} label="Swiggy Corporate" />
             <NavLink href="/search" icon={Search} label="Search" />
             <NavLink href="/offers" icon={Tag} label="Offers" badge="NEW" />
+            <NavLink href="/favorites" icon={Heart} label="Favourites" />
             <NavLink href="/help" icon={HelpCircle} label="Help" />
+            <ThemeToggle />
             <UserMenu />
             <CartNavLink />
           </nav>
 
-          {/* Mobile: cart + hamburger */}
+          {/* Mobile: cart + theme toggle + hamburger */}
           <div className="md:hidden flex items-center gap-1">
+            <ThemeToggle />
             <CartNavLink />
             <button
               className="p-2 text-(--swiggy-gray) hover:text-(--swiggy-text)"
@@ -177,6 +197,7 @@ export default function Header() {
           <NavLink href="/corporate" icon={Briefcase} label="Swiggy Corporate" onClick={() => setMobileOpen(false)} />
           <NavLink href="/search" icon={Search} label="Search" onClick={() => setMobileOpen(false)} />
           <NavLink href="/offers" icon={Tag} label="Offers" badge="NEW" onClick={() => setMobileOpen(false)} />
+          <NavLink href="/favorites" icon={Heart} label="Favourites" onClick={() => setMobileOpen(false)} />
           <NavLink href="/help" icon={HelpCircle} label="Help" onClick={() => setMobileOpen(false)} />
           {user ? (
             <>

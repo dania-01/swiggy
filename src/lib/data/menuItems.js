@@ -472,6 +472,19 @@ const RESTAURANT_MENU_MAP = {
   "88": MENUS.biryani,      // Veg Darbar by Behrouz
   "89": MENUS.northIndian,  // Veg Meals By LunchBox
   "90": MENUS.dessert,      // Apsara Ice Creams
+  "107": MENUS.northIndian, "108": MENUS.coffee,     "109": MENUS.dessert,
+  "110": MENUS.northIndian, "111": MENUS.chinese,    "112": MENUS.dessert,
+  "113": MENUS.southIndian, "114": MENUS.dessert,    "115": MENUS.coffee,
+  "116": MENUS.rolls,       "117": MENUS.northIndian,"118": MENUS.northIndian,
+  "119": MENUS.momos,       "120": MENUS.dessert,    "121": MENUS.chinese,
+  "122": MENUS.northIndian, "123": MENUS.burger,     "124": MENUS.chinese,
+  "125": MENUS.northIndian, "126": MENUS.biryani,    "127": MENUS.rolls,
+  "128": MENUS.momos,       "129": MENUS.dessert,    "130": MENUS.northIndian,
+  "131": MENUS.northIndian, "132": MENUS.rolls,      "133": MENUS.northIndian,
+  "134": MENUS.northIndian, "135": MENUS.pizza,      "136": MENUS.northIndian,
+  "137": MENUS.northIndian, "138": MENUS.dessert,    "139": MENUS.northIndian,
+  "140": MENUS.northIndian, "141": MENUS.dessert,    "142": MENUS.chinese,
+  "143": MENUS.dessert,     "144": MENUS.pizza,      "145": MENUS.pizza,
   "91": MENUS.northIndian,  // Ashapura Bhojnalay
   "92": MENUS.biryani,      // Thalaiva Biryani
   "93": MENUS.dessert,      // Natural Ice Cream

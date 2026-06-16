@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, ShoppingBag, CheckCircle2, MapPin, Tag } from "lucide-react";
+import { ChevronLeft, ShoppingBag, CheckCircle2, MapPin, Tag, Navigation } from "lucide-react";
 import { useOrders } from "@/hooks/useOrders";
 import { useToast } from "@/context/ToastContext";
 import { formatPrice } from "@/lib/utils/formatters";
+
+const TRACKING_WINDOW_SECONDS = 58; // matches last stage in tracking page
 
 function timeAgo(iso) {
   const diff = (Date.now() - new Date(iso)) / 1000;
@@ -13,6 +15,11 @@ function timeAgo(iso) {
   if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
   if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
   return new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+}
+
+function isLive(order) {
+  const elapsed = (Date.now() - new Date(order.placedAt)) / 1000;
+  return elapsed < TRACKING_WINDOW_SECONDS;
 }
 
 function OrderCard({ order }) {
@@ -31,10 +38,17 @@ function OrderCard({ order }) {
           <h3 className="text-base font-bold text-(--swiggy-text)">{order.restaurantName}</h3>
           <p className="text-xs text-(--swiggy-gray) mt-0.5">{timeAgo(order.placedAt)}</p>
         </div>
-        <div className="flex items-center gap-1.5 text-xs font-semibold text-(--swiggy-green)">
-          <CheckCircle2 size={14} />
-          Delivered
-        </div>
+        {isLive(order) ? (
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-(--swiggy-orange)">
+            <span className="size-1.5 rounded-full bg-(--swiggy-orange) animate-pulse" />
+            Live
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-(--swiggy-green)">
+            <CheckCircle2 size={14} />
+            Delivered
+          </div>
+        )}
       </div>
 
       {/* Items */}
@@ -61,8 +75,17 @@ function OrderCard({ order }) {
         <p className="text-sm font-bold text-(--swiggy-text)">{formatPrice(order.total)}</p>
       </div>
 
-      {/* Reorder */}
-      <div className="px-5 pb-4">
+      {/* Actions */}
+      <div className="px-5 pb-4 flex items-center gap-3">
+        {isLive(order) && (
+          <Link
+            href={`/orders/${order.id}`}
+            className="inline-flex items-center gap-1.5 bg-(--swiggy-orange) text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-[#e04800] transition-colors"
+          >
+            <Navigation size={12} />
+            Track Order
+          </Link>
+        )}
         <button
           onClick={handleReorder}
           className="inline-flex items-center gap-2 border border-(--swiggy-orange) text-(--swiggy-orange) text-xs font-bold px-4 py-2 rounded-xl hover:bg-(--swiggy-orange-light) transition-colors"

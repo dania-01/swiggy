@@ -2,6 +2,7 @@ import { CartProvider } from "@/context/CartContext";
 import { LocationProvider } from "@/context/LocationContext";
 import { ToastProvider } from "@/context/ToastContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import BackToTop from "@/components/ui/BackToTop";
@@ -15,23 +16,30 @@ export const metadata = {
   description: "Order food online from India's best restaurants. Fast delivery, great discounts on 90+ restaurants near you.",
 };
 
+const ANTI_FLASH = `(function(){try{var t=localStorage.getItem('swiggy_theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.classList.toggle('dark',t==='dark')}catch(e){}})();`;
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-white" style={{ fontFamily: "'Gilroy', Arial, 'Helvetica Neue', sans-serif" }}>
-        <AuthProvider>
-        <LocationProvider>
-          <ToastProvider>
-          <CartProvider>
-            <div className="h-1 w-full" style={{ background: "#1c1c1c" }} />
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <BackToTop />
-          </CartProvider>
-          </ToastProvider>
-        </LocationProvider>
-        </AuthProvider>
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: ANTI_FLASH }} />
+      </head>
+      <body className="min-h-full flex flex-col" style={{ fontFamily: "'Gilroy', Arial, 'Helvetica Neue', sans-serif" }}>
+        <ThemeProvider>
+          <AuthProvider>
+          <LocationProvider>
+            <ToastProvider>
+            <CartProvider>
+              <div className="h-1 w-full" style={{ background: "#1c1c1c" }} />
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+              <BackToTop />
+            </CartProvider>
+            </ToastProvider>
+          </LocationProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
