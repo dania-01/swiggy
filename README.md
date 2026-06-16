@@ -28,13 +28,14 @@
 ## Features
 
 - **Restaurant Listing** — 90 restaurants in a responsive grid with ratings, delivery time, pricing, and discount badges
+- **Featured Carousel** — horizontally scrollable "Top restaurant chains" section on the home page
 - **Cuisine Browsing** — 20 cuisine categories ("What's on your mind?" section) linking to filtered listings
 - **Search** — real-time restaurant and food name search from the filter bar
 - **Filters & Sort** — sort by relevance, rating, delivery time, or price; filter by Pure Veg, 4.0+ rating, under 30 min delivery, and active offers
 - **Restaurant Detail & Menu** — menu organized by category, sticky section navigation on desktop, scrollable tabs on mobile
 - **Cart** — add/remove items with quantity controls; automatically clears if you switch restaurants (matching real Swiggy behavior)
 - **Favorites** — heart-toggle restaurants; persisted across sessions via localStorage
-- **Order History** — orders saved locally and browsable per order
+- **Order History & Tracking** — orders saved locally, browsable per order with a live tracking timeline (Order Placed → Restaurant Confirmed → Being Prepared → Out for Delivery → Delivered)
 - **Location Selection** — detect your location via the browser Geolocation API with a reverse-geocoded human-readable address, or choose manually
 - **Auth Pages** — login and signup forms (UI only; no backend)
 - **Dark / Light Theme** — system preference detected on first load; persisted in localStorage; flash-free via inline script in `<head>`
