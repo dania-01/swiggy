@@ -2,8 +2,8 @@
 
 > A pixel-close frontend clone of India's most popular food delivery app, built with Next.js 16 App Router and React 19.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20Site-FF5200?style=for-the-badge&logo=netlify&logoColor=white)](https://swiiggyyy.netlify.app/)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dania-01/swiggy)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-swiiggyyy.netlify.app-FF5200?style=for-the-badge&logo=netlify&logoColor=white)](https://swiiggyyy.netlify.app/)
+[![GitHub](https://img.shields.io/badge/Source%20Code-dania--01%2Fswiggy-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dania-01/swiggy)
 
 ![Next.js](https://img.shields.io/badge/Next.js%2016-black?style=flat-square&logo=next.js)
 ![React](https://img.shields.io/badge/React%2019-61DAFB?style=flat-square&logo=react&logoColor=black)
